@@ -1,9 +1,10 @@
 {
     "name": "Player",
-    "rootNamespace": "Elderand",
     "references": [
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:0afce47533dab164dbb43bb144433152"
+        "GUID:0afce47533dab164dbb43bb144433152",
+        "GUID:0cf72e862d3207d41b8714c16e43f7e0",
+        "GUID:b134867f3cd9e37428b652f97bf28b72"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

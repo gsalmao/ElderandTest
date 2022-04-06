@@ -16,7 +16,6 @@ namespace Elderand.Nodecanvas
         public BBParameter<float> speed;
         public BBParameter<bool> updateDirection;
         private int curCurve;
-        private int curFraction;
         private float transition;
 
         private const int Resolution = 20;
@@ -25,12 +24,11 @@ namespace Elderand.Nodecanvas
         {
             transition = 0f;
             curCurve = 0;
-            curFraction = 0;
         }
 
         protected override void OnUpdate()
         {
-            Vector3 newPosition = GetNewPosition(bezierPath.value.pathFractions[curFraction].curves);
+            Vector3 newPosition = GetNewPosition(bezierPath.value.curves);
             if (updateDirection.value)
             {
                 if (newPosition.x > agent.position.x) agent.localScale = Vector3.one;
@@ -56,19 +54,7 @@ namespace Elderand.Nodecanvas
         private void UpdateCurveIndex(List<BezierCurve> curves)
         {
             if (curCurve < curves.Count - 1)
-            {
                 curCurve++;
-                return;
-            }
-
-            curCurve = 0;
-            UpdateFractionIndex();
-        }
-
-        private void UpdateFractionIndex()
-        {
-            if (curFraction < bezierPath.value.pathFractions.Count - 1)
-                curFraction++;
             else
                 EndAction(true);
         }

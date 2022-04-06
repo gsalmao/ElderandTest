@@ -105,7 +105,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4, y: 4}
+  m_Size: {x: 6.28125, y: 4.21875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -370,7 +370,8 @@ MonoBehaviour:
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"FlyHeight":{"_value":{"y":4.5},"_name":"FlyHeight","_id":"ef059ba6-87f4-4bc5-aa4f-b5f7b3cd22af","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector2,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"DiagonalFireballAngle":{"_value":{"z":-45.0},"_name":"DiagonalFireballAngle","_id":"94d7012c-fd1d-4537-88c2-fbfc271c881e","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector3,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"LandingPosition":{"_name":"LandingPosition","_id":"42474ad1-3941-48ae-b0b0-08d47c7e9281","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector2,
-    UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}}}'
+    UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"myBoolean":{"_name":"myBoolean","_id":"f74ee491-f26a-40de-955d-13ad260f4434","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
   _objectReferences:
   - {fileID: 0}
   - {fileID: 5748401266922783196}
@@ -457,6 +458,9 @@ MonoBehaviour:
     _references: []
   - _json: '{"_name":"LandingPosition","_id":"42474ad1-3941-48ae-b0b0-08d47c7e9281","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector2,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}'
+    _references: []
+  - _json: '{"_name":"myBoolean","_id":"f74ee491-f26a-40de-955d-13ad260f4434","$type":"NodeCanvas.Framework.Variable`1[[System.Boolean,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
 --- !u!1 &2838156975542339786
 GameObject:

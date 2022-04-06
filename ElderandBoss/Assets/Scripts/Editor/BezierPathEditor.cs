@@ -29,152 +29,84 @@ namespace Elderand.Editor
 
         public override void OnInspectorGUI() {
             SirenixEditorGUI.Title("Bezier Path Editor", null, TextAlignment.Center, true);
-
             EditorGUILayout.Space(10);
-            if (GUILayout.Button("Add New Path Fraction")) {
-                AddNewPathFraction();
-            }
-            EditorGUILayout.Space(10);
-
             SirenixEditorGUI.BeginBox();
             Draw();
             SirenixEditorGUI.EndBox();
         }
 
-        private void Draw() {
-
+        private void Draw()
+        {
             Undo.RecordObject(bezierPath, "Inspector");
-            BezierCurve lastCurve = bezierPath.pathFractions[0].curves[0];
+            BezierCurve lastCurve = bezierPath.curves[0];
             bool changeLastEnd = false;
 
-            // Draw Path Fraction
-            for (int i = 0; i < bezierPath.pathFractions.Count; i++) {
-                PathFraction pathFraction = bezierPath.pathFractions[i];
+            EditorGUILayout.BeginHorizontal();
 
-                GUILayout.Space(10);
-                SirenixEditorGUI.Title($"Path Fraction {i + 1}", null, TextAlignment.Left, true);
-                GUILayout.Space(10);
+            // Button
+            if (GUILayout.Button("Add New Curve"))
+            {
+                BezierCurve newCurve = new BezierCurve(bezierPath.curves.Last().endPosition);
+                bezierPath.curves.Add(newCurve);
+            }
 
+            EditorGUILayout.EndHorizontal();
+            GUILayout.Space(10);
 
-                // Buttons
-                 EditorGUILayout.BeginHorizontal();
+            SirenixEditorGUI.BeginBox();
 
-                GUI.enabled = editFractionIndex != i;
-                if (GUILayout.Button("Edit Curve", GUILayout.MaxWidth(200))) {
-                    editFractionIndex = i;
-                }
-                GUI.enabled = true;
+            // Draw Curves Inspector
+            for (int i = 0; i < bezierPath.curves.Count; i++)
+            {
+                BezierCurve curve = bezierPath.curves[i];
 
-                if (GUILayout.Button("Add New Curve", GUILayout.MaxWidth(200))) {
-
-                    BezierCurve newCurve = new BezierCurve(pathFraction.curves.Last().endPosition);
-                    pathFraction.curves.Add(newCurve);
-                    editFractionIndex = i;
-                }
-
-                if (GUILayout.Button("Delete Path Fraction", GUILayout.MaxWidth(200))) {
-
-                    bezierPath.pathFractions.Remove(pathFraction);
-
-                    if (i == editFractionIndex && i == bezierPath.pathFractions.Count) {
-                        editFractionIndex--;
-                    }
-                    else {
-                        editFractionIndex = i;
-                    }
+                // Delete Curve Button
+                EditorGUILayout.Space(10);
+                EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+                GUILayout.FlexibleSpace();
+                GUI.enabled = bezierPath.curves.Count > 1;
+                if (GUILayout.Button("Delete Curve"))
+                {
+                    bezierPath.curves.Remove(curve);
                     return;
                 }
 
+                GUI.enabled = true;
+                GUILayout.FlexibleSpace();
                 EditorGUILayout.EndHorizontal();
-                // Buttons
+                EditorGUILayout.Space(10);
 
-                GUILayout.Space(10);
+                // Delete Curve
+                if (changeLastEnd)
+                    curve.startPosition = lastCurve.endPosition;
 
-                // Draw Curves
-                SirenixEditorGUI.BeginBox(); // Could be Fouldout
+                curve.startPosition = EditorGUILayout.Vector3Field("Start Position", curve.startPosition);
 
-                for (int j = 0; j < pathFraction.curves.Count; j++) {
-                    BezierCurve curve = pathFraction.curves[j];
-
-                    // Delete Curve
-                    EditorGUILayout.Space(10);
-                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-
-                    GUILayout.FlexibleSpace();
-                    GUI.enabled = pathFraction.curves.Count > 1;
-                    if (GUILayout.Button("Delete Curve", GUILayout.MaxWidth(120))) {
-                        editFractionIndex = i;
-                        pathFraction.curves.Remove(curve);
-                        return;
-                    }
-                    GUI.enabled = true;
-                    GUILayout.FlexibleSpace();
-
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUILayout.Space(10);
-                    // Delete Curve
-
-                    if (changeLastEnd) {
-                        curve.startPosition = lastCurve.endPosition;
-                    }
-
-                    curve.startPosition = EditorGUILayout.Vector3Field("Start Position", curve.startPosition);
-                    
-                    // If change the start, have to change the last end
-                    if (lastCurve != curve && curve.startPosition != lastCurve.endPosition) {
-                        lastCurve.endPosition = curve.startPosition;
-                    }
-                    lastCurve = curve;
-
-                    curve.startTangent = EditorGUILayout.Vector3Field("Start Tangent", curve.startTangent);
-                    curve.endTangent = EditorGUILayout.Vector3Field("End Tangent", curve.endTangent);
-
-                    Vector3 endPosition = curve.endPosition;
-                    curve.endPosition = EditorGUILayout.Vector3Field("End Position", endPosition);
-
-                    changeLastEnd = curve.endPosition != endPosition;
-
-                    if(j < pathFraction.curves.Count - 1) {
-                        EditorGUILayout.Space(10);
-                        SirenixEditorGUI.HorizontalLineSeparator();
-                    }
+                // If change the start, have to change the last end
+                if (lastCurve != curve && curve.startPosition != lastCurve.endPosition)
+                {
+                    lastCurve.endPosition = curve.startPosition;
                 }
+                lastCurve = curve;
 
-                SirenixEditorGUI.EndBox();
+                curve.startTangent = EditorGUILayout.Vector3Field("Start Tangent", curve.startTangent);
+                curve.endTangent = EditorGUILayout.Vector3Field("End Tangent", curve.endTangent);
+
+                Vector3 endPosition = curve.endPosition;
+                curve.endPosition = EditorGUILayout.Vector3Field("End Position", endPosition);
+
+                changeLastEnd = curve.endPosition != endPosition;
+
+                if (i < bezierPath.curves.Count - 1)
+                {
+                    EditorGUILayout.Space(10);
+                    SirenixEditorGUI.HorizontalLineSeparator();
+                }
             }
-
+            SirenixEditorGUI.EndBox();
             SceneView.RepaintAll();
         }
-
-
-        private void DrawDeleteCurve(PathFraction pathFraction, int index, BezierCurve curve) {
-            EditorGUILayout.Space(10);
-            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-
-            GUILayout.FlexibleSpace();
-            GUI.enabled = pathFraction.curves.Count > 1;
-            if (GUILayout.Button("Delete Curve", GUILayout.MaxWidth(120))) {
-                editFractionIndex = index;
-                pathFraction.curves.Remove(curve);
-                return;
-            }
-            GUI.enabled = true;
-            GUILayout.FlexibleSpace();
-
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space(10);
-        }
-       
-
-        private void AddNewPathFraction() {
-            PathFraction newPathFraction = new PathFraction();
-            BezierCurve newCurve = new BezierCurve(bezierPath.GetLastPosition());
-            newPathFraction.curves.Add(newCurve);
-
-            bezierPath.pathFractions.Add(newPathFraction);
-            editFractionIndex = bezierPath.pathFractions.Count - 1;
-        }
-
+        
         private void AddOnSceneGUI(SceneView sceneView)
         {
             DrawHandles();
@@ -183,44 +115,37 @@ namespace Elderand.Editor
         private void DrawHandles() {
             Undo.RecordObject(bezierPath, "Handles");
 
-            BezierCurve lastCurve = bezierPath.pathFractions[0].curves[0];
+            BezierCurve lastCurve = bezierPath.curves[0];
             bool changeLastEnd = false;
-            for (int i = 0; i < bezierPath.pathFractions.Count; i++) {
-                PathFraction pathFraction = bezierPath.pathFractions[i];
 
-                for (int j = 0; j < pathFraction.curves.Count; j++) {
-                    BezierCurve curve = pathFraction.curves[j];
+            for (int j = 0; j < bezierPath.curves.Count; j++)
+            {
+                BezierCurve curve = bezierPath.curves[j];
 
-                    if (changeLastEnd) {
-                        curve.startPosition = lastCurve.endPosition;
-                    }
+                if (changeLastEnd)
+                    curve.startPosition = lastCurve.endPosition;
 
-                    if (i == editFractionIndex) {
-
-                        curve.startPosition = Handles.PositionHandle(curve.startPosition, Quaternion.identity);
-                        // Is not the first curve && change the startPosition
-                        if (lastCurve != curve && curve.startPosition != lastCurve.endPosition) {
-                            lastCurve.endPosition = curve.startPosition;
-                        }
-
-                        curve.startTangent = Handles.PositionHandle(curve.startTangent, Quaternion.identity);
-                        curve.endTangent = Handles.PositionHandle(curve.endTangent, Quaternion.identity);
-
-                        Vector3 endPosition = curve.endPosition;
-                        curve.endPosition = Handles.PositionHandle(curve.endPosition, Quaternion.identity);
-
-                        // Change the last
-                        changeLastEnd = curve.endPosition != endPosition;
-
-                        Handles.color = Color.red;
-                        Handles.DrawLine(curve.startPosition, curve.startTangent);
-                        Handles.DrawLine(curve.endPosition, curve.endTangent);
-                    }
-
-                    lastCurve = curve;
-                    Color color = PathPackColor(bezierPath.pathFractions.IndexOf(pathFraction));
-                    Handles.DrawBezier(curve.startPosition, curve.endPosition, curve.startTangent, curve.endTangent, color, Texture2D.normalTexture, 5);
+                curve.startPosition = Handles.PositionHandle(curve.startPosition, Quaternion.identity);
+                // Is not the first curve && change the startPosition
+                if (lastCurve != curve && curve.startPosition != lastCurve.endPosition) {
+                    lastCurve.endPosition = curve.startPosition;
                 }
+
+                curve.startTangent = Handles.PositionHandle(curve.startTangent, Quaternion.identity);
+                curve.endTangent = Handles.PositionHandle(curve.endTangent, Quaternion.identity);
+
+                Vector3 endPosition = curve.endPosition;
+                curve.endPosition = Handles.PositionHandle(curve.endPosition, Quaternion.identity);
+
+                // Change the last
+                changeLastEnd = curve.endPosition != endPosition;
+
+                Handles.color = Color.red;
+                Handles.DrawLine(curve.startPosition, curve.startTangent);
+                Handles.DrawLine(curve.endPosition, curve.endTangent);
+                    
+                lastCurve = curve;
+                Handles.DrawBezier(curve.startPosition, curve.endPosition, curve.startTangent, curve.endTangent, Color.blue, Texture2D.normalTexture, 5);
             }
         }
 

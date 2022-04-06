@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Elderand.Managers;
 
 namespace Elderand.Player
 {
@@ -12,18 +13,19 @@ namespace Elderand.Player
         {
             if (!trigger.enabled)
                 return;
-            StartCoroutine(Blink());
+            StartCoroutine(Damage());
         }
 
         public void OnTriggerStay2D()
         {
             if (!trigger.enabled)
                 return;
-            StartCoroutine(Blink());
+            StartCoroutine(Damage());
         }
 
-        private IEnumerator Blink()
+        private IEnumerator Damage()
         {
+            CameraManager.ShakeCamera(5f, .5f, 0);
             trigger.enabled = false;
             for (int i = 0; i < 10; i++)
             {

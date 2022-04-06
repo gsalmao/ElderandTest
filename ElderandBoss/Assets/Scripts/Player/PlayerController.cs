@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 using Elderand.ExtensionMethods;
+using Elderand.Managers;
+using NodeCanvas.Framework; 
 
 namespace Elderand.Player
 {
@@ -20,6 +22,8 @@ namespace Elderand.Player
         [FoldoutGroup("Player Values")] [SerializeField] private Vector2 jumpForce;
         [FoldoutGroup("Player Values")] [SerializeField] private float moveSpeed;
 
+        [FoldoutGroup("Outside References")] [SerializeField] private SignalDefinition OnFlyingDeepOneDie;
+        [FoldoutGroup("Outside References")] [SerializeField] private Transform flyingDeepOneTransform;
 
         private PlayerControls controls;
         private Vector2 movement;
@@ -33,13 +37,13 @@ namespace Elderand.Player
         {
             controls.Enable();
             controls.Gameplay.Jump.performed += Jump;
-            controls.Gameplay.Attack.performed += Attack;
+            controls.Gameplay.Attack.performed += KillDragon;
         }
 
         private void OnDisable()
         {
             controls.Gameplay.Jump.performed -= Jump;
-            controls.Gameplay.Attack.performed -= Attack;
+            controls.Gameplay.Attack.performed -= KillDragon;
             controls.Disable();
         }
 
@@ -56,9 +60,11 @@ namespace Elderand.Player
                 rb.AddForce(jumpForce, ForceMode2D.Impulse);
         }
 
-        private void Attack(InputAction.CallbackContext callback)
+        private void KillDragon(InputAction.CallbackContext callback)
         {
-
+            CameraManager.ChangePriority(1, 2);
+            CameraManager.ShakeCamera(10f, 1f, 1);
+            OnFlyingDeepOneDie.Invoke(transform, flyingDeepOneTransform, false);
         }
 
         void OnDrawGizmos()

@@ -15,20 +15,18 @@ namespace Elderand.ScriptableObjects
     {
         public BezierPath()
         {
-            pathFractions = new List<PathFraction>();
-            pathFractions.Add(new PathFraction());
-            pathFractions[0].curves = new List<BezierCurve>();
-            pathFractions[0].curves.Add(new BezierCurve(Vector3.zero));
+            curves = new List<BezierCurve>();
+            curves.Add(new BezierCurve(Vector3.zero));
         }
 
-        public List<PathFraction> pathFractions;
+        public List<BezierCurve> curves;
         public Vector3 GetInitialPosition() {
-            return pathFractions[0].curves[0].startPosition;
+            return curves[0].startPosition;
         }
 
         public Vector3 GetLastPosition()
         {
-            return pathFractions.Last().curves.Last().endPosition;
+            return curves.Last().endPosition;
         }
     }
 
